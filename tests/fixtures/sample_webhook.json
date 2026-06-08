@@ -1,0 +1,12 @@
+{
+  "event": "task.created",
+  "task": {
+    "id": "TEST-001",
+    "subject": "[수정요청] 메인 페이지 타이틀 변경",
+    "body": {
+      "content": "## 어느 화면인가요?\n- URL: https://www.example.com/\n- 메뉴 경로: 홈\n\n## 화면 어디에 있나요?\n페이지 상단 h1 텍스트\n\n## 지금 어떻게 보이나요?\nHello World\n\n## 어떻게 바뀌어야 하나요?\nHello Dooray!\n\n## 왜 바꾸나요?\n서비스명 반영 테스트"
+    }
+  },
+  "project": { "id": "4345173536132762644" },
+  "author": { "name": "테스터" }
+}

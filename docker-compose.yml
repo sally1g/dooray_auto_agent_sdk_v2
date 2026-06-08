@@ -1,0 +1,11 @@
+services:
+  dooray-claude-agent-v2:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./target_repo:/app/target_repo   # git 작업 디렉토리 (영구 보존)
+      - ./logs:/app/logs                 # 로그 영구 보존
+    restart: unless-stopped

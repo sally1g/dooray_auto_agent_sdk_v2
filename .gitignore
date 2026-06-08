@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+*.log
+
+# Target repo (별도 관리)
+target_repo/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
