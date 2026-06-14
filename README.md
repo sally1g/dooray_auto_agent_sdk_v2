@@ -103,3 +103,51 @@ python3 -m venv venv && ./venv/bin/pip install -r requirements.txt
    (예: `landing_hero_copy_fix`, `payment_api_refactor`)
 4. `DEV_<title>_YYYYMMDDHHMMSS` 태그 생성 → `git push origin <tag>` → 배포 트리거
 5. `report_result` 의 summary 에 생성한 태그명 포함
+
+---
+
+## 에이전트 종료 시나리오 및 결과 처리
+
+에이전트는 실행 후 **항상** Dooray 게시글에 결과를 댓글로 보고하며, 워크플로우 상태를 자동 전이한다.
+(`MANAGE_WORKFLOW_STATE=true` 설정 시)
+
+### 종료 조건 및 Dooray 처리
+
+| # | 종료 시나리오 | `AgentResult.status` | 워크플로우 상태 | Dooray 댓글 |
+|---|-------------|---------------------|--------------|-----------|
+| 1 | ✅ **정상 완료** — Claude가 `report_result(status="success")` 호출 | `success` | **구현** | `## ✅ 자동 처리 완료 → 상태: 구현` |
+| 2 | ⏱️ **Max Turns 도달** — 50턴 소진 후 `report_result` 미수신 | `failed` | **처리실패** | `## ❌ 자동 처리 실패 → 상태: 처리실패`<br/>오류: `max_turns_reached` |
+| 3 | ⏭️ **건너뜀** — Claude가 `report_result(status="skipped")` 호출<br/>(파일 못찾음, 범위 불명확 등) | `skipped` | **처리실패** | `## ❌ 처리 건너뜀 → 상태: 처리실패 (수동 개입 필요)` |
+| 4 | 🚫 **Tool Use 없이 종료** — `stop_reason != "tool_use"` | `success` | **구현** | `## ✅ 자동 처리 완료 → 상태: 구현`<br/>요약: transcript 텍스트 |
+| 5 | ⏰ **전체 타임아웃** — `CLAUDE_TIMEOUT_SEC` 초과 | `failed` | **처리실패** | `## ❌ 자동 처리 실패 → 상태: 처리실패`<br/>오류: `timeout` |
+| 6 | 💥 **시스템 예외** — Python 실행 중 예외 발생 | Exception | **처리실패** | `## ❌ 자동 처리 중 시스템 오류 → 상태: 처리실패` |
+
+### 댓글 내용 구조 (`format_result_comment`)
+
+```markdown
+## {아이콘} {제목}
+
+**이벤트:** `{event_type}`
+**태스크 ID:** `{task_id}`
+**테스트 결과:** {test_result}
+**커밋:** `{commit_hash}`
+**브랜치:** `auto/dooray-{task_id}` → `{TARGET_BETA_BRANCH}`
+
+### 수정 파일
+- `app/page.tsx`
+- `components/Button.tsx`
+
+### 요약
+{agent_result.summary}
+
+### 오류 (실패 시만 표시)
+```
+{agent_result.error}
+```
+```
+
+### 재트리거 조건 (보완요청 / 재시도)
+
+담당자가 추가 지시를 댓글로 남긴 후 워크플로우를 **보완요청** 또는 **할일** 상태로 전이하면,
+에이전트가 재실행된다. 이때 최신 사람 댓글 내용이 `event.extra_instruction`으로 주입되어
+기존 요청보다 우선 반영된다. (자세한 로직은 `app/webhooks/router.py` 참조)
