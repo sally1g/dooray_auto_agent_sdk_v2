@@ -1,6 +1,6 @@
 """에이전트 프롬프트 빌더 (SDK tool use 버전).
 
-v1과 달리 프롬프트를 두 부분으로 분리한다:
+프롬프트를 두 부분으로 분리한다:
   - build_system_prompt(): 모든 요청에 동일한 정적 지침 → prompt caching 대상
   - build_user_message(): 요청마다 달라지는 태스크 내용 + git 절차
 

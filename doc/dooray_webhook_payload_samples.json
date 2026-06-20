@@ -1,0 +1,177 @@
+{
+    "_comment": "Dooray Webhook 수신 페이로드 샘플 모음 — app/webhooks/parser.py 기준",
+    "_note": "실제 Dooray가 전송하는 구조. body(게시글 본문)는 webhook payload에 포함되지 않으며, DoorayClient.fetch_post()로 별도 API 조회 후 채워진다.",
+    "1_task_created": {
+        "_description": "신규 게시글 생성 — webhookType: postCreated",
+        "webhookType": "postCreated",
+        "hookEventType": "postCreated",
+        "post": {
+            "id": "4345173536132762645",
+            "subject": "[수정요청] 메인 페이지 타이틀 변경"
+        },
+        "project": {
+            "id": "4345173536132762644"
+        },
+        "source": {
+            "member": {
+                "name": "홍길동"
+            }
+        }
+    },
+    "2_task_updated_workflow_changed": {
+        "_description": "워크플로우(상태) 변경 — webhookType: postWorkflowChanged",
+        "webhookType": "postWorkflowChanged",
+        "hookEventType": "postWorkflowChanged",
+        "post": {
+            "id": "4345173536132762645",
+            "subject": "[수정요청] 메인 페이지 타이틀 변경"
+        },
+        "project": {
+            "id": "4345173536132762644"
+        },
+        "source": {
+            "member": {
+                "name": "홍길동"
+            }
+        }
+    },
+    "3_task_updated_post_edited": {
+        "_description": "게시글 내용 수정 — webhookType: postUpdated",
+        "webhookType": "postUpdated",
+        "hookEventType": "postUpdated",
+        "post": {
+            "id": "4345173536132762645",
+            "subject": "[수정요청] 메인 페이지 타이틀 변경 (수정됨)"
+        },
+        "project": {
+            "id": "4345173536132762644"
+        },
+        "source": {
+            "member": {
+                "name": "홍길동"
+            }
+        }
+    },
+    "4_comment_created": {
+        "_description": "새 댓글(log) 등록 — webhookType: postCommentCreated",
+        "webhookType": "postCommentCreated",
+        "hookEventType": "postCommentCreated",
+        "post": {
+            "id": "4345173536132762645"
+        },
+        "log": {
+            "id": "4345173536132762700",
+            "body": {
+                "content": "버튼 색상도 함께 파란색으로 변경해 주세요."
+            },
+            "post": {
+                "id": "4345173536132762645"
+            }
+        },
+        "project": {
+            "id": "4345173536132762644"
+        },
+        "source": {
+            "member": {
+                "name": "홍길동"
+            }
+        }
+    },
+    "5_comment_updated": {
+        "_description": "댓글 수정 — webhookType: postCommentUpdated",
+        "webhookType": "postCommentUpdated",
+        "hookEventType": "postCommentUpdated",
+        "post": {
+            "id": "4345173536132762645"
+        },
+        "log": {
+            "id": "4345173536132762700",
+            "body": {
+                "content": "버튼 색상도 함께 파란색으로 변경해 주세요. (수정됨)"
+            },
+            "post": {
+                "id": "4345173536132762645"
+            }
+        },
+        "project": {
+            "id": "4345173536132762644"
+        },
+        "source": {
+            "member": {
+                "name": "홍길동"
+            }
+        }
+    },
+    "6_legacy_log_created": {
+        "_description": "구버전 호환 댓글 이벤트 — webhookType: logCreated (postCommentCreated와 동일하게 처리)",
+        "webhookType": "logCreated",
+        "hookEventType": "logCreated",
+        "post": {
+            "id": "4345173536132762645"
+        },
+        "log": {
+            "id": "4345173536132762701",
+            "body": {
+                "content": "레이아웃 깨짐 현상도 수정 부탁드립니다."
+            },
+            "post": {
+                "id": "4345173536132762645"
+            }
+        },
+        "project": {
+            "id": "4345173536132762644"
+        },
+        "source": {
+            "member": {
+                "name": "테스터"
+            }
+        }
+    },
+    "___fetch_post_api_response": {
+        "_description": "게시글 API 조회 응답 — DoorayClient.fetch_post() 가 GET /project/v1/projects/{projectId}/posts/{postId} 로 수신하는 구조",
+        "header": {
+            "resultCode": 0,
+            "resultMessage": "success"
+        },
+        "result": {
+            "id": "4345173536132762645",
+            "subject": "[수정요청] 메인 페이지 타이틀 변경",
+            "body": {
+                "mimeType": "text/x-markdown",
+                "content": "## 어느 화면인가요?\n- URL: https://www.example.com/\n- 메뉴 경로: 홈\n\n## 화면 어디에 있나요?\n페이지 상단 h1 텍스트\n\n## 지금 어떻게 보이나요?\nHello World\n\n## 어떻게 바뀌어야 하나요?\nHello Dooray!\n\n## 왜 바꾸나요?\n서비스명 반영 테스트"
+            },
+            "workflow": {
+                "id": "4345173536132762610",
+                "name": "할 일",
+                "class": "registered"
+            },
+            "createdAt": "2026-06-20T10:00:00.000Z",
+            "updatedAt": "2026-06-20T10:00:00.000Z"
+        }
+    },
+    "___fetch_logs_api_response": {
+        "_description": "댓글 목록 API 조회 응답 — DoorayClient.fetch_latest_comment() 가 GET /project/v1/projects/{projectId}/posts/{postId}/logs 로 수신하는 구조",
+        "header": {
+            "resultCode": 0,
+            "resultMessage": "success"
+        },
+        "result": [
+            {
+                "id": "4345173536132762701",
+                "body": {
+                    "mimeType": "text/x-markdown",
+                    "content": "## ✅ 자동 처리 완료 → 상태: 구현\n\n**이벤트:** `task.created`\n..."
+                },
+                "createdAt": "2026-06-20T10:05:00.000Z"
+            },
+            {
+                "id": "4345173536132762700",
+                "body": {
+                    "mimeType": "text/x-markdown",
+                    "content": "버튼 색상도 함께 파란색으로 변경해 주세요."
+                },
+                "createdAt": "2026-06-20T10:10:00.000Z"
+            }
+        ]
+    }
+}
